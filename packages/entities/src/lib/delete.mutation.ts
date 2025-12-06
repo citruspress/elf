@@ -24,10 +24,10 @@ import { findIdsByPredicate } from './entity.utils';
  */
 export function deleteEntities<
   S extends EntitiesState<Ref>,
-  Ref extends EntitiesRef = DefaultEntitiesRef,
+  Ref extends EntitiesRef = DefaultEntitiesRef
 >(
   ids: OrArray<getIdType<S, Ref>>,
-  options: BaseEntityOptions<Ref> = {},
+  options: BaseEntityOptions<Ref> = {}
 ): Reducer<S> {
   return function (state, ctx) {
     const { ref: { idsKey, entitiesKey } = defaultEntitiesRef } = options;
@@ -35,7 +35,7 @@ export function deleteEntities<
     const idsToRemove = coerceArray(ids);
     const newEntities = { ...state[entitiesKey] };
     const newIds = state[idsKey].filter(
-      (id: getIdType<S, Ref>) => !idsToRemove.includes(id),
+      (id: getIdType<S, Ref>) => !idsToRemove.includes(id)
     );
 
     for (const id of idsToRemove) {
@@ -63,20 +63,19 @@ export function deleteEntities<
  */
 export function deleteEntitiesByPredicate<
   S extends EntitiesState<Ref>,
-  Ref extends EntitiesRef = DefaultEntitiesRef,
+  Ref extends EntitiesRef = DefaultEntitiesRef
 >(
   predicate: ItemPredicate<getEntityType<S, Ref>>,
-  options: BaseEntityOptions<Ref> = {},
+  options: BaseEntityOptions<Ref> = {}
 ): Reducer<S> {
   return function reducer(state, ctx) {
     const ids = findIdsByPredicate(
       state,
       options.ref || (defaultEntitiesRef as Ref),
-      predicate,
+      predicate
     );
 
     if (ids.length) {
-      ctx.setEvent({ type: 'delete', ids });
       return deleteEntities(ids, options)(state, ctx) as S;
     }
 
@@ -95,7 +94,7 @@ export function deleteEntitiesByPredicate<
  */
 export function deleteAllEntities<
   S extends EntitiesState<Ref>,
-  Ref extends EntitiesRef = DefaultEntitiesRef,
+  Ref extends EntitiesRef = DefaultEntitiesRef
 >(options: BaseEntityOptions<Ref> = {}): Reducer<S> {
   return function reducer(state: S, ctx) {
     const { ref: { idsKey, entitiesKey } = defaultEntitiesRef } = options;
